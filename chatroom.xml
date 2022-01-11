@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<chatroom>
+  <users/>
+  <messages>
+    <message name="test1" color="black">Hi</message>
+    <message name="test2" color="blue">Hello</message>
+    <message name="test3" color="cyan">How is your day</message>
+  </messages>
+</chatroom>

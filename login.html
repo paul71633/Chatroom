@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Login Page</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <script type="text/javascript">
+        //<![CDATA[
+        function clearMessage() {
+            try {
+                var name = window.parent.frames["message"].document.getElementById("username");
+                if (name != "") {
+                    window.parent.frames["message"].location.reload();
+                }
+            } catch (e) { }
+        }
+        
+        //username input checking
+       function checkInput(e) {
+            // username cannot be empty
+            var nameInput = document.getElementById("name");
+            var nameVal = nameInput.value.trim();
+            if (nameVal == "") {
+                alert("User name cannot be empty!");
+                e.preventDefault();
+                return false;
+            }
+
+            // username cannot contain illeagl character
+            var illChars = "\"\':;<>()[]{}!@#$%^&*-+=";
+            for (var i = 0; i < illChars.length; i++) {
+                if (nameVal.includes(illChars.charAt(i))) {   
+                    alert("Invalid user name!\nPlease don\'t use space and the following character. \"\':;<>()[]{}!@#$%^&*-+=");
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            // check if image uploaded
+            if(!document.getElementById("file").value){
+                alert("Please upload the image");
+                return false;
+            }
+        }
+        function uploadFile() {
+            var filepath = document.getElementById("file").value;
+            var m = filepath.match(/([^\/\\]+)$/);
+            var filename = m[1];
+            document.getElementById("filename").value = filename;
+        }
+        function addTag() {
+            document.getElementById("tag").style.display = 'block';
+            document.getElementById("submittag").style.display = 'block';
+            document.getElementById("addtag").style.display = 'none';
+        }
+
+        function closeTag() {
+            document.getElementById("tag").style.display = 'none';
+            document.getElementById("submittag").style.display = 'none';
+            document.getElementById("addtag").style.display = 'block';
+        }
+        
+        </script>
+    </head>
+
+    <body onload="clearMessage()">
+        <form enctype="multipart/form-data" method="post" action="login.php" onsubmit="javascript:checkInput(event)">
+            <table border="0" cellpadding="5" cellspacing="0">
+                <tr>
+                    <td>Please enter your user name:</td>
+                    <td align="left"><input class="text" name="name" id="name" type="text" size="20" maxlength="10" /></td>
+                </tr>
+                <tr>
+                    <td align="left">Please upload a picture:</td>
+                    <td align="left">
+                        <input class="text" name="filename" id="filename" type="text" size="20" />
+                        <input type="file" name="userimage" id="file" style="color: rgba(0,0,0,0)" onChange="uploadFile()">
+                    </td>
+                </tr>
+                <tr align="center">
+                    <td colspan="2"><input class="button" type="submit" value="Go!" style="width: 150px" /></td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

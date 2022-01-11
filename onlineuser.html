@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Online User List</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="onlineuser.css" />
+	<script>
+		var loadTimer = null;
+        var request;
+        var datasize;
+        var lastMsgID;
+
+        function load() {
+            loadTimer = null;
+            datasize = 0;
+            getUpdate();
+        }
+
+        function getUpdate() {
+            request = new XMLHttpRequest();
+            request.onreadystatechange = stateChange;
+            request.open("POST", "server.php", true);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            request.send("datasize=" + datasize);
+        }
+
+        function stateChange() {
+            if (request.readyState == 4 && request.status == 200 && request.responseText) {
+                var xmlDocument;
+                var parser = new DOMParser();
+                xmlDocument = parser.parseFromString(request.responseText, "text/xml");
+                datasize = request.responseText.length;
+                updateChat(xmlDocument);
+                getUpdate();
+            }
+        }
+
+        function updateChat(xmlDocument) {
+            //point to the message nodes
+            var users = xmlDocument.getElementsByTagName("user");
+			document.getElementById('userlist').innerHTML = "";
+
+        	for (var i = 0; i < users.length; i++) {
+				console.log(users[i].getAttribute('name') + users[i].getAttribute('user_tag'));
+        		showUser(users[i].getAttribute('name'), users[i].getAttribute('user_image'), users[i].getAttribute('user_tag'));
+        	}
+        }
+
+        function showUser(nameStr ,pictureUrl, usrTAG){
+                document.getElementById('userlist').innerHTML = document.getElementById('userlist').innerHTML + '<tr>' + '<td>' + nameStr + '(' + usrTAG + ')' + '</td><td><img class="picture" src="' + pictureUrl  + '" width="50px" height="50px" />' + '</td>' + '</tr>';
+        }
+
+	</script>
+</head>
+<body onload="load()">
+	<table id="userTable">
+		<thead class="t-head" cellspacing="0" cellpadding="0">
+			<tr>
+                <th><strong>User Name</strong></th>
+				<th><strong>Profile Picture</strong></th>
+			</tr>
+		</thead>
+		<tbody id="userlist"></tbody>
+	</table>
+</body>
+</html>
